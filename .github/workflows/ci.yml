@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14.2
+        env:
+          POSTGRES_USER: developer
+          POSTGRES_PASSWORD: supersecretpassword
+          POSTGRES_DB: forumapi_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup Database
+        run: npm run migrate:test
+        env:
+          PGHOST_TEST: localhost
+          PGPORT_TEST: 5432
+          PGUSER_TEST: developer
+          PGPASSWORD_TEST: supersecretpassword
+          PGDATABASE_TEST: forumapi_test
+
+      - name: Run Test
+        run: npm run test
+        env:
+          PGHOST_TEST: localhost
+          PGPORT_TEST: 5432
+          PGUSER_TEST: developer
+          PGPASSWORD_TEST: supersecretpassword
+          PGDATABASE_TEST: forumapi_test
+          ACCESS_TOKEN_KEY: accesstokenkeyaccesstokenkey
+          REFRESH_TOKEN_KEY: refreshtokenkeyrefreshtokenkey
+          ACCESS_TOKEN_AGE: 3000

@@ -29,7 +29,7 @@ describe('AddThreadUseCase', () => {
     const addedThread = await addThreadUseCase.execute(useCasePayload);
 
     expect(addedThread).toStrictEqual(new AddedThread({
-      id: 'thread-123',
+      id: 'thread-999', // Sengaja dibuat salah (aslinya thread-123)
       title: useCasePayload.title,
       owner: useCasePayload.owner,
     }));

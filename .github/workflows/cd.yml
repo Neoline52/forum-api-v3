@@ -11,10 +11,8 @@ jobs:
 
     steps:
       - name: Deploy to Server
-        env:
-          PRIVATE_KEY: ${{ secrets.KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
             if [ ! -d \"~/forum-api-v3\" ]; then

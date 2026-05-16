@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Deploy to Server
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          cat <<'EOF' > private_key
+          ${{ secrets.SSH_PRIVATE_KEY }}
+          EOF
           chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
             if [ ! -d \"~/forum-api-v3\" ]; then

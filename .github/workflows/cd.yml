@@ -18,8 +18,11 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ~/forum-api
+            if [ ! -d "~/forum-api-v3" ]; then
+              git clone https://github.com/Neoline52/forum-api-v3.git ~/forum-api-v3
+            fi
+            cd ~/forum-api-v3
             git pull origin main
             npm install
             npm run migrate
-            pm2 restart forum-api
+            pm2 restart forum-api || pm2 start src/app.js --name "forum-api"

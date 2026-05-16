@@ -17,15 +17,15 @@ class JwtTokenManager extends AuthenticationTokenManager {
 
   async verifyRefreshToken(token) {
     try {
-      const artifacts = this._jwt.token.decode(token);
-      this._jwt.token.verifySignature(artifacts, process.env.REFRESH_TOKEN_KEY);
+      const artifacts = this._jwt.decode(token);
+      this._jwt.verifySignature(artifacts, process.env.REFRESH_TOKEN_KEY);
     } catch (error) {
       throw new InvariantError('refresh token tidak valid');
     }
   }
 
   async decodePayload(token) {
-    const artifacts = this._jwt.token.decode(token);
+    const artifacts = this._jwt.decode(token);
     return artifacts.decoded.payload;
   }
 }
